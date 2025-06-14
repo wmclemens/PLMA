@@ -671,3 +671,406 @@ const SimpleCRM = () => {
                     </button>
                     <button
                       onClick={() => setShowNewCompanyForm(true)}
+                      className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
+                    >
+                      <Plus className="h-4 w-4" />
+                      <span>New Company</span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Search */}
+                <div className="relative">
+                  <Search className="h-5 w-5 absolute left-3 top-3 text-gray-400" />
+                  <input
+                    type="text"
+                    placeholder="Search companies..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 pr-4 py-2 w-full border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                  />
+                </div>
+
+                {/* Companies List */}
+                <div className="bg-white rounded-lg shadow overflow-hidden">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Company
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Industry
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Revenue
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {filteredCompanies.map(company => (
+                        <tr key={company.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div>
+                              <div className="text-sm font-medium text-gray-900">{company.name}</div>
+                              <div className="text-sm text-gray-500">{company.email}</div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {company.industry}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              company.status === 'Active' ? 'bg-green-100 text-green-800' :
+                              company.status === 'Prospect' ? 'bg-yellow-100 text-yellow-800' :
+                              'bg-gray-100 text-gray-800'
+                            }`}>
+                              {company.status}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {company.revenue}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            <button
+                              onClick={() => {
+                                setSelectedCompany(company);
+                                setActiveView('company-detail');
+                              }}
+                              className="text-blue-600 hover:text-blue-900 mr-4"
+                            >
+                              View
+                            </button>
+                            <button
+                              onClick={() => setEditingCompany({ ...company })}
+                              className="text-green-600 hover:text-green-900"
+                            >
+                              Edit
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+
+            {/* Company Detail View */}
+            {activeView === 'company-detail' && selectedCompany && (
+              <div className="space-y-6">
+                <div className="flex items-center space-x-4">
+                  <button
+                    onClick={() => setActiveView('companies')}
+                    className="text-blue-600 hover:text-blue-700"
+                  >
+                    ← Back to Companies
+                  </button>
+                  <h2 className="text-2xl font-bold text-gray-900">{selectedCompany.name}</h2>
+                  <button
+                    onClick={() => setEditingCompany({ ...selectedCompany })}
+                    className="bg-gray-600 text-white px-3 py-1 rounded-md hover:bg-gray-700 flex items-center space-x-1"
+                  >
+                    <Edit2 className="h-4 w-4" />
+                    <span>Edit</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                  {/* Company Info */}
+                  <div className="lg:col-span-2 bg-white rounded-lg shadow p-6">
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">Company Information</h3>
+                    <div className="grid grid-cols-2 gap-4">
+                      {customFields.filter(f => f.id !== 'name').map(field => (
+                        <div key={field.id} className="flex items-center space-x-2">
+                          <div>
+                            <div className="text-sm text-gray-500">{field.label}</div>
+                            <div className="text-sm font-medium">{selectedCompany[field.id] || 'Not specified'}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Quick Stats */}
+                  <div className="bg-white rounded-lg shadow p-6">
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">Quick Stats</h3>
+                    <div className="space-y-4">
+                      <div>
+                        <div className="text-sm text-gray-500">Status</div>
+                        <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                          selectedCompany.status === 'Active' ? 'bg-green-100 text-green-800' :
+                          selectedCompany.status === 'Prospect' ? 'bg-yellow-100 text-yellow-800' :
+                          'bg-gray-100 text-gray-800'
+                        }`}>
+                          {selectedCompany.status}
+                        </span>
+                      </div>
+                      <div>
+                        <div className="text-sm text-gray-500">Total Activities</div>
+                        <div className="text-2xl font-bold text-gray-900">
+                          {getCompanyActivities(selectedCompany.id).length}
+                        </div>
+                      </div>
+                      <div>
+                        <div className="text-sm text-gray-500">Created</div>
+                        <div className="text-sm font-medium">
+                          {new Date(selectedCompany.createdAt).toLocaleDateString()}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Activity Stream */}
+                <div className="bg-white rounded-lg shadow">
+                  <div className="px-6 py-4 border-b border-gray-200">
+                    <h3 className="text-lg font-medium text-gray-900">Activity Stream</h3>
+                  </div>
+                  <div className="p-6">
+                    {/* Add Activity Form */}
+                    <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+                      <div className="flex space-x-4">
+                        <select
+                          value={newActivity.type}
+                          onChange={(e) => setNewActivity({ ...newActivity, type: e.target.value })}
+                          className="px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        >
+                          <option value="note">Note</option>
+                          <option value="call">Call</option>
+                          <option value="email">Email</option>
+                          <option value="meeting">Meeting</option>
+                        </select>
+                        <input
+                          type="text"
+                          placeholder="Add activity..."
+                          value={newActivity.content}
+                          onChange={(e) => setNewActivity({ ...newActivity, content: e.target.value })}
+                          className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                          onKeyPress={(e) => e.key === 'Enter' && addActivity()}
+                        />
+                        <button
+                          onClick={addActivity}
+                          className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                        >
+                          Add
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* Activities List */}
+                    <div className="space-y-4">
+                      {getCompanyActivities(selectedCompany.id).map(activity => (
+                        <div key={activity.id} className="flex items-start space-x-3 p-4 border rounded-lg">
+                          <MessageSquare className="h-5 w-5 text-gray-400 mt-0.5" />
+                          <div className="flex-1">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-sm font-medium">{getUserName(activity.userId)}</span>
+                              <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                                activity.type === 'note' ? 'bg-blue-100 text-blue-800' :
+                                activity.type === 'call' ? 'bg-green-100 text-green-800' :
+                                activity.type === 'email' ? 'bg-purple-100 text-purple-800' :
+                                'bg-orange-100 text-orange-800'
+                              }`}>
+                                {activity.type}
+                              </span>
+                              <span className="text-xs text-gray-500">
+                                {formatDate(activity.timestamp)}
+                              </span>
+                            </div>
+                            <div className="text-sm text-gray-700 mt-1">{activity.content}</div>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* Custom Fields View (Admin Only) */}
+            {activeView === 'fields' && currentUser.role === 'admin' && (
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-2xl font-bold text-gray-900">Custom Fields</h2>
+                  <button
+                    onClick={() => setShowNewFieldForm(true)}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Add Field</span>
+                  </button>
+                </div>
+
+                {/* Fields List */}
+                <div className="bg-white rounded-lg shadow overflow-hidden">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Field Name
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Type
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Required
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          System Field
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {customFields.map(field => (
+                        <tr key={field.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm font-medium text-gray-900">{field.label}</div>
+                            {field.options && (
+                              <div className="text-xs text-gray-500">
+                                Options: {field.options.join(', ')}
+                              </div>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-800">
+                              {field.type}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {field.required ? 'Yes' : 'No'}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                            {field.system ? 'Yes' : 'No'}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            {!field.system && (
+                              <button
+                                onClick={() => removeCustomField(field.id)}
+                                className="text-red-600 hover:text-red-900"
+                              >
+                                Remove
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Field Preview */}
+                <div className="bg-white rounded-lg shadow p-6">
+                  <h3 className="text-lg font-medium text-gray-900 mb-4">All Company Fields Preview</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {customFields.map(field => (
+                      <div key={field.id} className="space-y-1">
+                        <label className="block text-sm font-medium text-gray-700">
+                          {field.label} {field.required && <span className="text-red-500">*</span>}
+                        </label>
+                        {renderFieldInput(field, '', () => {}, true)}
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* User Management View (Admin Only) */}
+            {activeView === 'users' && currentUser.role === 'admin' && (
+              <div className="space-y-6">
+                <div className="flex justify-between items-center">
+                  <h2 className="text-2xl font-bold text-gray-900">User Management</h2>
+                  <button
+                    onClick={() => setShowNewUserForm(true)}
+                    className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 flex items-center space-x-2"
+                  >
+                    <Plus className="h-4 w-4" />
+                    <span>Add User</span>
+                  </button>
+                </div>
+
+                {/* Users List */}
+                <div className="bg-white rounded-lg shadow overflow-hidden">
+                  <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          User
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Role
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {users.map(user => (
+                        <tr key={user.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center">
+                              <User className="h-10 w-10 text-gray-400" />
+                              <div className="ml-4">
+                                <div className="text-sm font-medium text-gray-900">{user.name}</div>
+                                <div className="text-sm text-gray-500">{user.email}</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              user.role === 'admin' ? 'bg-red-100 text-red-800' : 'bg-blue-100 text-blue-800'
+                            }`}>
+                              {user.role}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <span className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                              user.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                            }`}>
+                              {user.active ? 'Active' : 'Inactive'}
+                            </span>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
+                            {user.id !== currentUser.id && (
+                              <button
+                                onClick={() => toggleUserStatus(user.id)}
+                                className={`${
+                                  user.active ? 'text-red-600 hover:text-red-900' : 'text-green-600 hover:text-green-900'
+                                }`}
+                              >
+                                {user.active ? 'Deactivate' : 'Activate'}
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* All Modal Components */}
+        {/* ... (continuing with modals) */}
+      </div>
+    </div>
+  );
+};
+
+export default SimpleCRM;
