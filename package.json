@@ -2,7 +2,7 @@
   "name": "simple-crm",
   "version": "1.0.0",
   "private": true,
-  "homepage": "https://yourusername.github.io/simple-crm",
+  "homepage": "https://wmclemens.github.io/simple-crm",
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.4",
     "@testing-library/react": "^13.3.0",
