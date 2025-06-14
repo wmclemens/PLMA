@@ -124,4 +124,44 @@ The app uses Tailwind CSS for styling. Customize the design by:
 
 Currently, the CRM uses in-memory storage (data resets on page refresh). For production use, consider integrating with:
 
-- Local Storage for
+- Local Storage for client-side persistence
+- Firebase, Supabase, or similar backend services
+- REST API with your preferred backend
+- Database solutions like PostgreSQL, MongoDB, etc.
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Roadmap
+
+- [ ] Data persistence with backend integration
+- [ ] Email integration
+- [ ] Calendar integration
+- [ ] Reporting and analytics dashboard
+- [ ] Export functionality
+- [ ] Mobile app version
+- [ ] API for third-party integrations
+
+## Support
+
+If you encounter any issues or have questions:
+
+1. Check the [Issues](https://github.com/yourusername/simple-crm/issues) page
+2. Create a new issue if your problem isn't already reported
+3. Provide detailed information about the issue
+
+## Acknowledgments
+
+- Built with [React](https://reactjs.org/)
+- Styled with [Tailwind CSS](https://tailwindcss.com/)
+- Icons from [Lucide React](https://lucide.dev/)
+- Deployed with [GitHub Pages](https://pages.github.com/)
